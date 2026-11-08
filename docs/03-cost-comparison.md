@@ -1,40 +1,32 @@
-# Cost comparison — what is free vs what needs spending
+# Cost — $0 additional-cost architecture
 
-Current additional spending: **$0**. Nothing below has been purchased or activated.
+**Budget rule (owner decision, 2026-11-08): $0 additional spend.** Only existing subscriptions and their included capabilities. No new paid services, upgrades, or trials that require payment details.
 
-> Price sources: official pages (elevenlabs.io, twilio.com) were **blocked by this session's network policy**, so figures come from web-search snippets of official and third-party pages (Nov 2026). Verify on the vendors' pricing pages before approving.
-
-## Free (in place now)
-| Item | Cost | Notes |
-|---|---|---|
-| AI Manager runs (Claude scheduled tasks W1/W2/W5) | $0 extra | Uses your existing Claude subscription usage (~19 runs/week). |
-| Notion AI HQ | $0 | Existing workspace. |
-| Google Calendar / Metricool / Lovable reads | $0 | Existing connectors, read-only. |
-| ElevenLabs voice prototype (browser test) | existing credits | Text tests today used ≈ 500 credits total (8 runs). Browser voice tests consume agent minutes from your plan. |
-| Push notifications | $0 | Claude app. |
-| Make content workflow | $0 | Unchanged. |
-
-## Requires approval / payment
-| Item | Estimated cost | Status | Why |
+## Active dependencies — all $0 extra
+| Component | Uses | Limit that matters | Fits? |
 |---|---|---|---|
-| **Twilio account + Canadian local number** | ~1.15 USD/month (US local-number list price; CA price to confirm) | Needs approval (BFT-3) | ElevenLabs cannot place PSTN calls without an imported number. |
-| Twilio outbound minutes to your iPhone | ~0.014 USD/min (third-party figure for US/Canada; confirm CA-mobile rate) | Needs approval | |
-| ElevenLabs agent minutes | ~0.08 USD/min above included minutes (third-party sources); LLM billed separately but small (test turn ≈ 0.003 USD) | Depends on your plan (BFT-5) | Free tier reportedly ≈ 15 min/month; Starter (~6 USD/mo) ≈ 75 min. |
-| HTML/CSS to Image Basic | 14 USD/month | Needs decision (BFT-2) | Free 50 images/month ≈ 8 carousels. |
-| Make Core (optional, later) | paid tier | Not needed now | Only if you want instant voice-command writes (R4). |
+| Claude routines W1/W2/W5 | Existing Claude subscription | Daily routine-run cap (reported 5/day Pro, 15/day Max; one report of 3/day) + normal usage limits | ✅ Lean schedule = **max 3 runs/day** (Mon–Thu: W1 + 2×W2; Fri: W1 + W5) |
+| Push notifications | Claude app | — | ✅ |
+| Notion AI HQ | Existing workspace | SQL query mode limited on non-Business plans | ✅ Routines use rows mode only |
+| Google Calendar | Existing account, read-only | — | ✅ |
+| Metricool | Existing connector, read-only | — | ✅ |
+| Lovable | Existing project, aggregate `count(*)` + analytics reads | Reads don't use Lovable message credits | ✅ |
+| ElevenLabs Voice Manager | Existing plan, browser link only | Plan's included minutes/credits (check dashboard) | ✅ if used occasionally |
+| Make | Not used by the manager | 1,000 credits, 2 active scenarios | ✅ unchanged |
+| HTML/CSS to Image | Unchanged content workflow; `.jpg` link = on-the-fly conversion of existing image | Free 50 images/month | ✅ (whether `.jpg` conversion counts as a new render is unverified — watch the HCTI dashboard) |
 
-## Estimated monthly cost once calling is on (estimate)
-Assumptions: 22 weekday briefings × 2 min + ~10 reminder calls × 1 min = **~54 call-minutes/month**.
+Measured: one routine run that stopped at the kill switch reported ≈ 0.09 USD *list-price equivalent* of model usage — this is drawn from the subscription allowance, **not billed**, unless "extra usage" is enabled on the Claude account.
 
-| Line | Low | High |
+## Usage/cost risks to watch
+1. **Claude "extra usage" setting** — if enabled, runs beyond plan limits could be billed. Must be OFF (manual check).
+2. **Routine daily cap** — manual "Run now" tests count toward the cap; do activation tests on a day with no scheduled runs.
+3. **ElevenLabs** — browser voice tests consume plan minutes; usage-based billing must be OFF (manual check).
+4. **HCTI free quota** — content volume can exceed 50 images/month; the manager reports usage weekly.
+
+## Future possibilities (NOT active, NOT dependencies)
+| Option | Cost | Notes |
 |---|---|---|
-| Twilio number | 1.15 | 1.50 |
-| Twilio minutes (54 × 0.014) | 0.76 | 1.50 |
-| ElevenLabs minutes (if above plan) | 0 (covered by plan) | 4.32 (54 × 0.08) |
-| **Total (USD/month)** | **≈ 2** | **≈ 7.5** |
-
-Possible **$0 trial path** (to verify): a Twilio trial account comes with trial credit and can call **verified** numbers only (your own iPhone qualifies), with a short "trial account" message before each call. That would allow a real-call test without spending — still requires your approval to create the account.
-
-## Not recommended
-- A separate CRM: 1 lead so far; Notion + Lovable DB is enough. Re-evaluate at ~20 leads/month, and only with company-approved tools.
-- Replacing Make or Metricool: both work; no business case.
+| Real outbound phone calls via Twilio number + ElevenLabs | ≈ 1.15 USD/mo number + ≈ 0.014 USD/min (secondary sources) + ElevenLabs minutes beyond plan | Only option for true PSTN calls. Requires explicit owner approval. |
+| Twilio free trial (no card, ≈ 15 USD credit, 30 days, verified numbers only, trial message before calls) | $0 for 30 days | Temporary test only; ElevenLabs compatibility with trial numbers unverified. Requires owner approval. |
+| HTML/CSS to Image Basic | 14 USD/mo | Only if volume > 50 images/month. |
+| Make paid tier | paid | Only for instant voice-command writes. |

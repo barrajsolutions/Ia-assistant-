@@ -52,8 +52,11 @@ reminders:
   max_calls_per_day: 3
   call_retry: { on_no_answer: 1, retry_after_minutes: 15, then: push }
 
-schedules:   # Claude scheduled tasks (fresh session per run)
+budget: "$0 additional spend — existing subscriptions only"
+schedules:   # Claude routines, fresh session per run, MAX 3 runs/day
   W1_morning_briefing: "CRON_TZ=America/Toronto 10 8 * * 1-5"
-  W2_reminder_sweep:   "CRON_TZ=America/Toronto 7 10,13,16 * * 1-5"
-  W5_weekly_review:    "CRON_TZ=America/Toronto 40 15 * * 5"
-  voice_call_target_time: "08:30 weekdays (after W1 writes the voice script)"
+  W2_reminder_sweep:   "CRON_TZ=America/Toronto 7 12,16 * * 1-4"
+  W5_weekly_review:    "CRON_TZ=America/Toronto 40 15 * * 5"   # also performs Friday's reminder sweep
+notifications: claude_push          # Google Calendar reminder events NOT approved
+future_not_active:
+  voice_call_target_time: "08:30 weekdays — requires paid telephony + approval"

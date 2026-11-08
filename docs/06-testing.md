@@ -1,23 +1,21 @@
-# Phase 6 — Test documentation (actual results, 2026-11-08)
+# Test results (actual)
 
-| # | Test | Method | Result |
-|---|---|---|---|
-| T1 | Task extraction | Seeded 8 tasks in AI Tasks; queried by Status/Deadline in W1 manual run | ✅ Pass |
-| T2 | Calendar retrieval | Google Calendar `list_events` Nov 8–22, America/Toronto | ✅ 25 events, recurring events expanded, correct EST offset (-05:00) after DST change |
-| T3 | Briefing accuracy | Manual W1 run → CEO Reports « Daily briefing — Monday Nov 9 »; every fact cross-checked against source | ✅ Pass — found 3 real issues (TikTok errors, 0 scheduled posts, stale content calendar) |
-| T4 | Voice: tomorrow's schedule | ElevenLabs LLM test BVM-1 | ✅ Pass (2 runs) |
-| T5 | Voice: reminder request | BVM-2 | ✅ Pass (2 runs); run 1 time-statement inconsistency fixed by prompt |
-| T6 | Voice: marketing summary, no invented numbers | BVM-3 | ✅ Pass (2 runs) |
-| T7 | Voice: ambiguous task completion → clarification | BVM-4 | ✅ Pass (2 runs) |
-| T8 | Voice: TTS-safe output | Inspection of run 1 | ❌ Arabizi found → fixed (Arabic script) → ✅ run 2 |
-| T9 | Approval enforcement | Inspection: no tool used to create/schedule Metricool posts; Approvals DB untouched; registry forbids it; prompts forbid it | ✅ Pass (design + no writes made) |
-| T10 | Marketing workflow preservation | Make scenarios 6824732/6828540 and data store 187388 read only; `lastEdit` unchanged (2026-10-29) | ✅ Pass |
-| T11 | Make W6 blueprint | `validate_blueprint_schema` | ✅ Structurally valid. Module field validation needs the ElevenLabs keychain → at activation |
-| T12 | Scheduled routines | `create_trigger` W1/W2/W5 | ⚠️ Created, but **no connectors attachable from API in this org** → paused |
-| T13 | Reminder scheduling / postponement / duplicate prevention | Test task « TEST — reminder pipeline » (Reminder at Nov 9 10:00) | ⏳ Pending: runs at the first W2 sweep after you attach connectors. Expected: exactly one push, Reminder state → Sent, count 1, no repeat at 13:07 |
-| T14 | Failure handling | Prompts: kill switch, `Integration unavailable`, partial runs | ⏳ Verify on first live runs (Automation Log) |
-| T15 | Kill switch | Set registry row to Paused → run → expect « Skipped - paused » | ⏳ Run once after activation |
-| T16 | Real phone call | — | ⛔ Not possible: no phone number (needs approval) |
-| T17 | Lebanese speech recognition (ASR) on real voice | Browser test by Mohamad | ⏳ Task BFT-4 |
+## Round 2 — 2026-11-08 (approved safe tests)
+| # | Test | Where | Result | Evidence |
+|---|---|---|---|---|
+| R1 | Push notification reaches iPhone | Setup session → Claude app | ⏳ sent (test #1 16:42, #3 16:47); **awaiting Mohamad's confirmation** | PushNotification « Mobile push requested » |
+| R2 | Push from a routine | Routine W2 manual fire | ⏳ sent (test #2 16:43); awaiting confirmation | Routine session cse_01BJ3ec8YpTDm8S4c7AgdoMJ called PushNotification |
+| R3 | Connectors inside routines | Routine W2 manual fire | ❌ **None available** — routine found no Notion tools | Same session transcript |
+| R4 | Kill switch fail-closed when Notion unreachable | Routine W2 | ✅ Stopped, 0 reads, 0 writes | Final reply « KILL SWITCH: run skipped (Notion unavailable…) » |
+| R5 | Kill switch Paused → no execution | Setup session executing G0 | ✅ Read Status=Paused, wrote only the skip log, nothing else; restored Active | Automation Log « W2 skipped — KILL SWITCH TEST » |
+| R6 | Reminder delivery | Setup session executing W2 logic | ✅ BFT-8 found due, updated Sent/Last reminded/count=1, one push | Log « W2 … 16:47 — REMINDER TEST » |
+| R7 | Duplicate prevention | Second sweep 1 min later | ✅ 0 due → no push | Log « W2 … 16:48 — DUPLICATE TEST » |
+| R8 | New-lead alert without PII | Lovable aggregate query | ✅ last 24 h: 0 rows; since Oct 1: quiz=1 (count only) | — |
+| R9 | Notion rows-mode date filter | Setup session | ❌ **Bug found**: datetime filter returned 0 rows for a due reminder → prompts changed to filter by state and compare times explicitly | Log 16:47 details |
+| R10 | TikTok PNG fix | Vendor docs | ✅ HCTI docs: `.jpg` extension converts on the fly. Live URL check blocked by session network | docs.htmlcsstoimage.com |
+| R11 | Agent backup | ElevenLabs read | ✅ elevenlabs/backup/*.json + system prompt | version agtvrsn_9401m6ygjk4te5pb9rkskj23y6fz |
 
-Credits used by tests: ≈ 500 ElevenLabs credits (8 text test turns). No calls placed. No purchases.
+**Not yet proven inside a routine with real data** (needs connectors attached): kill switch Paused path, full W1 briefing, W2 reminder push, duplicate guard. These are the 3 activation tests in docs/08-activation.md.
+
+## Round 1 — 2026-11-08
+Manual W1 briefing from live data ✅ · Voice commands BVM-1..4 ✅ (2 runs each; Arabizi → Arabic script fixed) · Make W6 blueprint structurally valid ✅ · Content workflow untouched ✅.

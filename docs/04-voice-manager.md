@@ -45,7 +45,7 @@ Guardrails in the prompt: talks only to Mohamad; ends call if someone else answe
 
 Suites: `suite_0201m6ygh41afjmrj24vyv91xeqf`, `suite_4901m6ygjr21e9fb3znj7gdwr1c5`. **Not yet tested:** real speech recognition of Lebanese dialect, voice quality on a phone line, latency on PSTN — these need your browser test (BVM-4 task) and then a real call.
 
-## Real call architecture (prepared, not active)
+## Real call architecture (FUTURE — not active, requires paid telephony and owner approval; not a dependency of the $0 system)
 ```
 W1 routine (08:10) → CEO Reports voice script
       → Make W6 relay (webhook 2998526, blueprint in make/blueprints/)

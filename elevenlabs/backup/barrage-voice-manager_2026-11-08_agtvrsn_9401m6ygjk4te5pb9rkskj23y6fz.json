@@ -1,0 +1,60 @@
+{
+  "_backup_note": "Barrage Voice Manager configuration snapshot taken 2026-11-08 before any further modification. Restore with ElevenLabs agents_update_* tools. Contains no secrets. Previous (pre-AI-Manager) values are listed in docs/09-change-log.md.",
+  "agent_id": "agent_7101m69hm0k8fp5a9aq3mae6hc4x",
+  "branch_id": "agtbrch_2901m69hm1wfebxawffxgvvsp9dt",
+  "version_id": "agtvrsn_9401m6ygjk4te5pb9rkskj23y6fz",
+  "name": "Barrage Voice Manager",
+  "tags": ["Barrage Finance", "Personal", "Voice Manager"],
+  "conversation_config": {
+    "asr": {"quality": "high", "provider": "scribe_realtime", "user_input_audio_format": "pcm_16000", "keywords": []},
+    "turn": {"turn_timeout": 7, "silence_end_call_timeout": -1, "mode": "turn", "turn_eagerness": "normal", "speculative_turn": true, "turn_model": "turn_v3"},
+    "tts": {"model_id": "eleven_v4_turbo", "voice_id": "cjVigY5qzO86Huf0OWal", "expressive_mode": true, "agent_output_audio_format": "pcm_16000", "stability": 0.5, "speed": 1, "similarity_boost": 0.75, "text_normalisation_type": "system_prompt", "enable_phoneme_tags": true},
+    "conversation": {"text_only": false, "max_duration_seconds": 600},
+    "language_presets": {},
+    "agent": {
+      "first_message": "مرحبا محمد، أنا الـ Barrage Voice Manager. عندك دقيقة؟",
+      "language": "ar",
+      "dynamic_variables": {"dynamic_variable_placeholders": {
+        "call_reason": "TEST morning briefing (test data, not live)",
+        "briefing": "TEST DATA. Today Monday Nov 9: 12:00 publish video #6 Assurance vie (trop jeune? faux). 18:30 Story sondage du jour. Pending approvals: TikTok JPEG fix (BFT-1), HTML/CSS to Image plan (BFT-2), Twilio phone calling (BFT-3). Problem: 5 TikTok photo posts failed last week because PNG is not accepted.",
+        "tomorrow_schedule": "TEST DATA. Tuesday Nov 10: 12:00 publish video #7 Assurance salaire (ton plus grand actif); 18:30 Story sondage du jour.",
+        "marketing_week": "TEST DATA. Nov 1-7: 8 posts published on Instagram and Facebook, 1 on LinkedIn, 2 TikTok videos published, 5 TikTok photo posts failed (PNG format). 1 website lead total.",
+        "open_tasks": "TEST DATA. BFT-1 Decide TikTok JPEG fix - Nov 10; BFT-2 Decide HTML/CSS to Image plan - Nov 12; BFT-3 Approve Twilio phone calling - Nov 13; BFT-4 Test Voice Manager in browser - Nov 11; BFT-5 Confirm ElevenLabs plan - Nov 13"
+      }},
+      "prompt": {
+        "llm": "deepseek-v41-flash",
+        "temperature": 0,
+        "timezone": "America/Toronto",
+        "ignore_default_personality": true,
+        "tool_ids": [],
+        "built_in_tools": {
+          "end_call": {"params": {"system_tool_type": "end_call"}},
+          "language_detection": {"params": {"system_tool_type": "language_detection", "only_at_conversation_start": false}},
+          "voicemail_detection": {"params": {"system_tool_type": "voicemail_detection", "voicemail_message": "مرحبا محمد، هيدا الـ Barrage Voice Manager. في تحديثات بالـ Notion. باي."}}
+        },
+        "prompt_file": "elevenlabs/backup/system-prompt_agtvrsn_9401m6ygjk4te5pb9rkskj23y6fz.md"
+      }
+    }
+  },
+  "platform_settings": {
+    "privacy": {"record_voice": false, "retention_days": 30, "delete_transcript_and_pii": false, "delete_audio": true, "zero_retention_mode": false},
+    "call_limits": {"agent_concurrency_limit": 1, "daily_limit": 8, "bursting_enabled": false},
+    "trust_context": "high",
+    "auth": {"enable_auth": false, "allowlist": [], "require_origin_header": false},
+    "data_collection": {
+      "reminder_requests": {"type": "string", "description": "JSON array of reminder requests Mohamad confirmed during the call. Each item: {\"what\": short text, \"when_local\": ISO datetime America/Toronto computed from the call time, \"related_task_id\": task ID like BFT-3 or null}. Use [] if none. Only include requests he confirmed."},
+      "task_completions": {"type": "string", "description": "JSON array of task IDs (e.g. [\"BFT-3\"]) that Mohamad explicitly confirmed as done after the agent repeated the ID and title. Use [] if none or if any ambiguity remained."},
+      "decisions": {"type": "string", "description": "Approvals, refusals or changes Mohamad stated, each with his exact words in quotes. Empty string if none."},
+      "callback_request": {"type": "string", "description": "If Mohamad asked to be called back later, the requested time as ISO datetime America/Toronto. Empty string otherwise."},
+      "call_outcome": {"type": "string", "enum": ["completed", "callback_requested", "voicemail", "wrong_person", "no_interaction"], "description": "Overall outcome of the call."},
+      "language_used": {"type": "string", "enum": ["lebanese_arabic", "french", "english", "mixed"], "description": "Main language Mohamad used."}
+    },
+    "evaluation_criteria": [
+      {"id": "no_invented_facts", "name": "No invented facts", "conversation_goal_prompt": "Success if the agent only stated meetings, tasks, deadlines and marketing facts that appear in the provided call data, and said it did not have the information otherwise."},
+      {"id": "confirmed_before_done", "name": "Confirmed task before completion", "conversation_goal_prompt": "Success if, whenever the user asked to mark a task done, the agent repeated the exact task ID and title and got a clear yes. Success if no such request occurred."},
+      {"id": "lebanese_dialect", "name": "Lebanese dialect quality", "conversation_goal_prompt": "Success if, when speaking Arabic, the agent used natural Lebanese colloquial Arabic rather than formal Modern Standard Arabic."}
+    ]
+  },
+  "tests": ["test_6301m6yggz9mfws8z1h5e0717c7e", "test_2101m6yggzpge6abfkgvhy2rx1h5", "test_7501m6ygh013f2xrt719t88kp98q", "test_4801m6ygh0cffxvts49kbgbt3t4h"],
+  "phone_numbers": []
+}

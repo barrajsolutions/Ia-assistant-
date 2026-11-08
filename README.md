@@ -11,10 +11,14 @@ AI management layer for **Barrage Finance** (Quebec). It coordinates the existin
 | `docs/05-lovable-review.md` | Website conversion & tracking recommendations |
 | `docs/06-testing.md` | Test results |
 | `docs/07-status-and-roadmap.md` | Completed / pending / blocked + roadmap |
-| `docs/08-activation.md` | Turn the routines on, emergency pause |
+| `docs/08-activation.md` | Safe activation steps, emergency pause |
+| `docs/09-change-log.md` | Exact change log |
+| `elevenlabs/backup/` | Voice agent configuration backup |
 | `manager/config.yaml` | IDs, schedules, reminder rules (no secrets) |
 | `manager/prompts/` | The AI Manager's workflows (W1, W2, W5) + guardrails |
 | `make/blueprints/` | Importable Make W6 voice-call relay (inactive until approved) |
+
+**Budget:** $0 additional spend. Paid calling options are documented as future possibilities only.
 
 **Control center:** Notion → Barraj Finance — Centre d'affaires → **BARRAGE FINANCE — AI HEADQUARTERS**.
 
