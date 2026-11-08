@@ -1,0 +1,59 @@
+# Barrage AI Manager — configuration (no secrets in this file, ever)
+timezone: America/Toronto          # DST handled by IANA zone
+owner: Mohamad Albarraj
+
+notion:
+  hq_page: 41210b5495948140877cc3b5dea8e65f
+  data_sources:
+    ai_tasks: collection://2e7a3f08-9620-4769-b661-390735ffd44e
+    automation_log: collection://5a00c912-b021-4102-9264-609da73aca8b
+    agent_registry: collection://dc3473b4-37b1-4ac8-9abb-a16e76bdb430
+    ceo_reports: collection://f0635b18-e57c-4c29-8df4-4f64d3af87d3
+    integrations_status: collection://b07da378-d932-40b5-b20c-78b3f245061a
+    approvals_existing: collection://453eb407-f7a7-481b-bf45-a622cf97528f
+    content_calendar_existing: collection://27cbd38c-f815-4279-9aae-4e404e3e44cb
+    content_ideas_existing: collection://26269b0e-fdf1-463d-a455-7da3b6b8a306
+    tools_costs_existing: collection://4a385109-7a90-4c4e-9978-8eb856493b9d
+  kill_switch_page: 41210b54959481a49c8bf1a4a5a659a0   # "⛔ GLOBAL KILL SWITCH" row; Status=Paused stops all runs
+
+google_calendar:
+  calendar_id: mohamadbarraj94@gmail.com
+  access: read-only
+
+metricool:
+  brand_id: 6941045
+  access: read-only            # never createScheduledPost / updateScheduledPost from the manager
+
+make:
+  zone: us2.make.com
+  team_id: 3317843
+  content_scenarios_do_not_modify: [6824732, 6828540]
+  data_store_do_not_modify: 187388
+  spare_webhook: 2998526       # "Barrage Finance - Claude", unattached
+
+lovable:
+  project_id: b4161a5f-d953-41bd-8263-dcb6928be764
+  lead_access: aggregate_counts_only
+
+elevenlabs:
+  voice_agent_id: agent_7101m69hm0k8fp5a9aq3mae6hc4x
+  phone_number_id: null        # set after Twilio number import is approved
+  outbound_calling_enabled: false
+
+reminders:
+  levels:
+    Call-worthy: phone call once calling is enabled; push until then
+    Notify: push notification + Notion
+    Silent: Notion only (briefing)
+  quiet_hours: { start: "20:00", end: "08:00" }   # no push/call in this window
+  weekend: briefing-only (no reminder pushes, no calls) unless Priority = P1 Critical
+  max_reminders_per_task_per_day: 2
+  min_minutes_between_reminders_same_task: 120
+  max_calls_per_day: 3
+  call_retry: { on_no_answer: 1, retry_after_minutes: 15, then: push }
+
+schedules:   # Claude scheduled tasks (fresh session per run)
+  W1_morning_briefing: "CRON_TZ=America/Toronto 10 8 * * 1-5"
+  W2_reminder_sweep:   "CRON_TZ=America/Toronto 7 10,13,16 * * 1-5"
+  W5_weekly_review:    "CRON_TZ=America/Toronto 40 15 * * 5"
+  voice_call_target_time: "08:30 weekdays (after W1 writes the voice script)"

@@ -1,0 +1,50 @@
+{
+  "name": "Barrage AI Manager - W6 Voice call relay (DISABLED until approved)",
+  "flow": [
+    {
+      "id": 1,
+      "module": "gateway:CustomWebHook",
+      "version": 1,
+      "parameters": { "hook": null, "maxResults": 1 },
+      "metadata": { "designer": { "x": 0, "y": 0 }, "note": "Attach webhook 2998526 'Barrage Finance - Claude' (API-key protected, header x-make-apikey). Payload: {call_type, call_reason, briefing, tomorrow_schedule, marketing_week, open_tasks, request_id}" }
+    },
+    {
+      "id": 2,
+      "module": "http:ActionSendDataAPIKeyAuth",
+      "version": 3,
+      "filter": {
+        "name": "Guard: allowed call types only",
+        "conditions": [
+          [ { "a": "{{1.call_type}}", "o": "text:equal", "b": "morning_briefing" } ],
+          [ { "a": "{{1.call_type}}", "o": "text:equal", "b": "reminder" } ]
+        ]
+      },
+      "parameters": { "key": null },
+      "mapper": {
+        "url": "https://api.elevenlabs.io/v1/convai/twilio/outbound-call",
+        "method": "post",
+        "bodyType": "raw",
+        "contentType": "application/json",
+        "parseResponse": true,
+        "data": "{\"agent_id\":\"agent_7101m69hm0k8fp5a9aq3mae6hc4x\",\"agent_phone_number_id\":\"REPLACE_AFTER_TWILIO_IMPORT\",\"to_number\":\"REPLACE_WITH_MOHAMAD_IPHONE_E164\",\"conversation_initiation_client_data\":{\"dynamic_variables\":{\"call_reason\":{{toString(1.call_reason)}},\"briefing\":{{toString(1.briefing)}},\"tomorrow_schedule\":{{toString(1.tomorrow_schedule)}},\"marketing_week\":{{toString(1.marketing_week)}},\"open_tasks\":{{toString(1.open_tasks)}}}}}"
+      },
+      "metadata": { "designer": { "x": 300, "y": 0 }, "note": "API key = ElevenLabs key stored in a Make keychain (header xi-api-key). Never in this file. to_number is FIXED here so the relay can only ever call Mohamad." }
+    },
+    {
+      "id": 3,
+      "module": "gateway:WebhookRespond",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "status": "200",
+        "body": "{\"request_id\":\"{{1.request_id}}\",\"http_status\":\"{{2.statusCode}}\",\"conversation_id\":\"{{2.data.conversation_id}}\",\"call_sid\":\"{{2.data.callSid}}\"}",
+        "headers": [ { "key": "Content-Type", "value": "application/json" } ]
+      },
+      "metadata": { "designer": { "x": 600, "y": 0 } }
+    }
+  ],
+  "metadata": {
+    "version": 1,
+    "scenario": { "roundtrips": 1, "maxErrors": 3, "autoCommit": true, "sequential": true, "confidential": true, "dataloss": false, "dlq": false, "freshVariables": false }
+  }
+}
